@@ -1,0 +1,11 @@
+/*
+This is file is here just to demonstrare the two ways for loading css
+
+all .local.css will be loaded from the javascript
+and .global.css will be loaded using file-loader/extract-loader
+
+we load global css to improve performance
+ */
+.content .logo {
+    margin-bottom: 29px;
+}

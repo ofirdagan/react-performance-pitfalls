@@ -1,0 +1,3 @@
+steps:
+
+input => pure component - didn't help
