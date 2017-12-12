@@ -30,6 +30,63 @@ export default class FormComponent extends React.Component {
 
 }
 
+const withRenderCount = (name, Comp) => {
+  return class WithRenderComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.renderCount = 0;
+    }
+
+    render() {
+      return <Comp {...this.props}/>;
+    }
+  }
+};
+
+class CardHeader extends React.Component {
+  render() {
+    const {title} = this.props;
+    return (
+      <h1>
+        {title}
+      </h1>
+    );
+  }
+}
+
+class CardFooter extends React.Component {
+  render() {
+    const {footNote} = this.props;
+    return (
+      <h4>
+        {footNote}
+      </h4>
+    );
+  }
+}
+
+class CardContent extends React.Component {
+  render() {
+    const {footNote} = this.props;
+    return (
+      <InputComponent/>
+    );
+  }
+}
+
+class Card extends React.Component {
+  render() {
+    const {}
+    return (
+      <div>
+        <CardHeader title={title}/>
+        <CardContent/>
+        <CardFooter footNote={}/>
+      </div>
+    );
+  }
+}
+
 class GrandChild extends React.Component {
   constructor(props) {
     super(props);
