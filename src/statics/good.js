@@ -1,49 +1,54 @@
 import React from 'react';
 
-export default class FormComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    const inputs = Array.from({length: 180}).reduce((acc, curr, index) => {
-      acc[index] = '';
-      return acc;
-    }, {});
-    this.handleChange = this.handleChange.bind(this);
-    this.state = {inputs};
-  }
-
-  handleChange({index, text}) {
-    const inputs = Object.assign({}, this.state.inputs, {[index]: text});
-    this.setState({inputs});
-  }
-
-  render() {
-    const {inputs} = this.state;
-    const inputsComps = Object.keys(inputs).map((key, index) => {
-      return <InputComponent key={index} index={index} value={inputs[key]} handleChange={this.handleChange}/>
-    });
-    return (
-      <form>
-        {inputsComps}
-      </form>
-    );
-  }
-
-}
-
 const withRenderCount = (name, Comp) => {
-  return class WithRenderComponent extends React.Component {
+  return class WithRenderComponent extends React.PureComponent {
     constructor(props) {
       super(props);
       this.renderCount = 0;
     }
 
     render() {
+      console.log(`${name}[${this.props.index}]: rendered ${++this.renderCount} times`);
       return <Comp {...this.props}/>;
     }
   }
 };
 
-class CardHeader extends React.Component {
+class FormComponentComp extends React.Component {
+  constructor(props) {
+    super(props);
+    const cardValues = Array.from({length: 100}).reduce((acc, curr, index) => {
+      acc[index] = '';
+      return acc;
+    }, {});
+    this.handleChange = this.handleChange.bind(this);
+    this.state = {cardValues, cardsWithValuesCount: 0};
+  }
+
+  handleChange({index, text}) {
+    const cardValues = Object.assign({}, this.state.cardValues, {[index]: text});
+    const cardsWithValuesCount = Object.keys(cardValues).filter(key => cardValues[key]).length;
+    this.setState({cardValues, cardsWithValuesCount});
+  }
+
+  render() {
+    const {cardValues} = this.state;
+    const cards = Object.keys(cardValues).map((key, index) => {
+      return <Card key={index} index={index} value={cardValues[key]} handleChange={this.handleChange.bind(this)}/>
+    });
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <h1>Cards With Values: {this.state.cardsWithValuesCount}</h1>
+        <form className={'form'}>
+          {cards}
+        </form>
+      </div>
+    );
+  }
+
+}
+
+class CardHeaderComp extends React.Component {
   render() {
     const {title} = this.props;
     return (
@@ -54,7 +59,7 @@ class CardHeader extends React.Component {
   }
 }
 
-class CardFooter extends React.Component {
+class CardFooterComp extends React.Component {
   render() {
     const {footNote} = this.props;
     return (
@@ -65,36 +70,31 @@ class CardFooter extends React.Component {
   }
 }
 
-class CardContent extends React.Component {
+class CardContentComp extends React.Component {
   render() {
-    const {footNote} = this.props;
+    const {index, value, handleChange} = this.props;
     return (
-      <InputComponent/>
+      <InputComponent key={index} index={index} value={value} handleChange={handleChange}/>
     );
   }
 }
 
-class Card extends React.Component {
+class CardComp extends React.PureComponent {
   render() {
-    const {}
+    const {index, value, handleChange} = this.props;
     return (
-      <div>
-        <CardHeader title={title}/>
-        <CardContent/>
-        <CardFooter footNote={}/>
+      <div className={'card'}>
+        <CardHeader title={`Card ${index}`}/>
+        <CardContent index={index} value={value} handleChange={handleChange}/>
+        <CardFooter footNote={`foot note of card ${index}`}/>
       </div>
     );
   }
 }
 
-class GrandChild extends React.Component {
-  constructor(props) {
-    super(props);
-    this.renderCount = 0;
-  }
+class GrandChildComp extends React.Component {
   render() {
     const {value, index} = this.props;
-    console.log(`grand child[${index}]: rendered ${++this.renderCount} times`);
     const text = value ? 'has value' : '';
     return (
       <div>
@@ -102,22 +102,17 @@ class GrandChild extends React.Component {
       </div>
     );
   }
-};
+}
 
-class InputComponent extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.renderCount = 0;
-  }
-
+class InputComponentComp extends React.PureComponent {
   doSomeNaiveCalcOnProps(value) {
-    const randomLetter = ('abcdefghijklmnopqrstuvwxyz').split('')[(Math.floor(Math.random() * 26 ))];
-    return value.split('').map(char => char === randomLetter ? `a` : char).join('');
+    // const randomLetter = ('abcdefghijklmnopqrstuvwxyz').split('')[(Math.floor(Math.random() * 26 ))];
+    // return value.split('').map(char => char === randomLetter ? `a` : char).join('');
+    return value.split('').map(char => char).join('');
   }
 
   render() {
     const {index, value, handleChange} = this.props;
-    console.log(`input[${index}]: rendered ${++this.renderCount} times`);
     const calculatedValue = this.doSomeNaiveCalcOnProps(value);
     return (
       <div>
@@ -127,3 +122,12 @@ class InputComponent extends React.PureComponent {
     );
   }
 }
+
+const Card = withRenderCount('Card', CardComp);
+const CardHeader = withRenderCount('CardHeader', CardHeaderComp);
+const CardFooter = withRenderCount('CardFooter', CardFooterComp);
+const CardContent = withRenderCount('CardContent', CardContentComp);
+const GrandChild = withRenderCount('GrandChild', GrandChildComp);
+const InputComponent = withRenderCount('InputComponent', InputComponentComp);
+export default withRenderCount('FormComponent', FormComponentComp);
+
