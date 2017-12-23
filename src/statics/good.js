@@ -34,7 +34,13 @@ class FormComponentComp extends React.Component {
   render() {
     const {cardValues} = this.state;
     const cards = Object.keys(cardValues).map((key, index) => {
-      return <Card key={index} index={index} value={cardValues[key]} handleChange={this.handleChange.bind(this)}/>
+      return (
+        <Card
+          key={index}
+          index={index}
+          value={cardValues[key]}
+          handleChange={this.handleChange}
+        />);
     });
     return (
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -79,7 +85,7 @@ class CardContentComp extends React.Component {
   }
 }
 
-class CardComp extends React.PureComponent {
+class CardComp extends React.Component {
   render() {
     const {index, value, handleChange} = this.props;
     return (
@@ -104,10 +110,8 @@ class GrandChildComp extends React.Component {
   }
 }
 
-class InputComponentComp extends React.PureComponent {
+class InputComponentComp extends React.Component {
   doSomeNaiveCalcOnProps(value) {
-    // const randomLetter = ('abcdefghijklmnopqrstuvwxyz').split('')[(Math.floor(Math.random() * 26 ))];
-    // return value.split('').map(char => char === randomLetter ? `a` : char).join('');
     return value.split('').map(char => char).join('');
   }
 
