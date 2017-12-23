@@ -120,7 +120,7 @@ class InputComponentComp extends React.Component {
     const calculatedValue = this.doSomeNaiveCalcOnProps(value);
     return (
       <div>
-        <input value={calculatedValue} onChange={(event) => this.props.handleChange({text: event.target.value, index})}/>
+        <input value={calculatedValue} onChange={(event) => handleChange({text: event.target.value, index})}/>
         <GrandChild value={calculatedValue} index={index}/>
       </div>
     );
