@@ -100,8 +100,8 @@ class CardComp extends React.Component {
 
 class GrandChildComp extends React.Component {
   render() {
-    const {value, index} = this.props;
-    const text = value ? 'has value' : '';
+    const {hasValue} = this.props;
+    const text = hasValue ? 'has value' : '';
     return (
       <div>
         {text}
@@ -121,7 +121,7 @@ class InputComponentComp extends React.Component {
     return (
       <div>
         <input value={calculatedValue} onChange={(event) => handleChange({text: event.target.value, index})}/>
-        <GrandChild value={calculatedValue} index={index}/>
+        <GrandChild hasValue={!!calculatedValue} index={index}/>
       </div>
     );
   }
